@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -75,19 +76,22 @@ namespace BAUnipark
         {
             Driver.FindElement(By.XPath("//div[@class='zone-select-div']//a[contains(text(),'Rygos')]")).Click();
             Thread.Sleep(500);
-            Driver.FindElement(By.XPath("//div[@class='choose' and @style='display: block;']"));
+            Driver.FindElement(By.XPath("//div[@class='choose']//div[contains(text(), 'RIX')]"));
         }
 
         [Given(@"Enter car related data")]
         public void GivenEnterCarRelatedData()
         {
-            ScenarioContext.Current.Pending();
+            Driver.FindElement(By.XPath("//input[@id='nr' and @type='text']")).SendKeys("JOU351");
         }
 
         [Given(@"Select Vilnius cheapest zone")]
         public void GivenSelectVilniusCheapestZone()
         {
-            ScenarioContext.Current.Pending();
+            Driver.FindElement(By.XPath("//div[@class='zone-select-div']//a[contains(text(),'Vilniaus')]")).Click();
+            Thread.Sleep(500);
+            IList<IWebElement> parkingOptions = Driver.FindElements(By.XPath("//div[@id='place_0']//td[@class='coll-4']"));
+
         }
 
         [Given(@"Add last extra service for two adults")]
