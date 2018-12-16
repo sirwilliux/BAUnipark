@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -91,6 +93,21 @@ namespace BAUnipark
             Driver.FindElement(By.XPath("//div[@class='zone-select-div']//a[contains(text(),'Vilniaus')]")).Click();
             Thread.Sleep(500);
             IList<IWebElement> parkingOptions = Driver.FindElements(By.XPath("//div[@id='place_0']//td[@class='coll-4']"));
+            List<float> prices = new List<float>();
+            foreach (var parkingOption in parkingOptions)
+            {
+                string priceGet = parkingOption.Text;
+                string parsedPrice = Regex.Replace(priceGet, "[A-Za-zž,]", "");
+                if (parsedPrice != String.Empty)
+                {
+                    prices.Add(Int32.Parse(parsedPrice));
+                }
+                
+            }
+
+            var cheapest = prices.Min();
+            var cheapest2 = cheapest.ToString();
+            Driver.FindElement(By.XPath("//div[@class='choose']//td[contains(text(), '" + cheapest2.Remove(cheapest2.Length-2) + "')]/..//a[@title='Toliau']")).Click();
 
         }
 
