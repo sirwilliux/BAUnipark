@@ -45,7 +45,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Hooks.cs" />
+    <Compile Include="PageObject.cs" />
     <Compile Include="StepDefinition.cs" />
     <Compile Include="UniparkSteps.feature.cs">
       <AutoGen>True</AutoGen>

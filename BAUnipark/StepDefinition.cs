@@ -86,7 +86,7 @@ namespace BAUnipark
         [Given(@"Enter car related data")]
         public void GivenEnterCarRelatedData()
         {
-            Driver.FindElement(By.XPath("//input[@id='nr' and @type='text']")).SendKeys("JOU351");
+            Driver.FindElement(By.XPath("//input[@id='nr' and @type='text']")).SendKeys(Constants.CarNo);
         }
 
         [Given(@"Select Vilnius cheapest zone")]
@@ -135,16 +135,16 @@ namespace BAUnipark
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
             Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys("Philoso");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys("Raptor");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys("+37060000000");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).SendKeys("someone@something.com");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys(Constants.FirstName);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys(Constants.LastName);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys(Constants.PhoneNo);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).SendKeys(Constants.Email);
             Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='newsletter']")).Click();
             Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='name']")).Click();
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).SendKeys("BA");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).SendKeys("1234567890");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).SendKeys("Wilno");
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).SendKeys("951753456");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).SendKeys(Constants.CompanyTitle);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).SendKeys(Constants.CompanyCode);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).SendKeys(Constants.CompanyAddress);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).SendKeys(Constants.VatCode);
             Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='rules']")).Click();
             Thread.Sleep(500);
             Driver.FindElement(By.XPath("//button[@id='accept-button']")).Click();
@@ -155,14 +155,14 @@ namespace BAUnipark
         {
             Driver.Navigate().Refresh();
             Thread.Sleep(2000);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).GetAttribute("value"), "Philoso");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).GetAttribute("value"), "Raptor");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).GetAttribute("value"), "+37060000000");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).GetAttribute("value"), "someone@something.com");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).GetAttribute("value"), "BA");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).GetAttribute("value"), "1234567890");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).GetAttribute("value"), "Wilno");
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).GetAttribute("value"), "951753456");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).GetAttribute("value"), Constants.FirstName);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).GetAttribute("value"), Constants.LastName);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).GetAttribute("value"), Constants.PhoneNo);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).GetAttribute("value"), Constants.Email);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).GetAttribute("value"), Constants.CompanyTitle);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).GetAttribute("value"), Constants.CompanyCode);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).GetAttribute("value"), Constants.CompanyAddress);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).GetAttribute("value"), Constants.VatCode);
 
         }
 
