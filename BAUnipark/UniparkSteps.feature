@@ -13,5 +13,5 @@ Scenario: Book parking
 	Then Fill all the personal data including all the agreements and options available
 
 	#Optional part:
-	#And Refresh the page and make sure that all the data is still present and valid.
-	#Then Delete at least one of the mandatory fields and check that at least one error message is displayed.
+	And Refresh the page and make sure that all the data is still present and valid.
+	Then Delete at least one of the mandatory fields and check that at least one error message is displayed.

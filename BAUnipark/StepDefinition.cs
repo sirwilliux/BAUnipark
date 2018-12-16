@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
@@ -147,6 +148,31 @@ namespace BAUnipark
             Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='rules']")).Click();
             Thread.Sleep(500);
             Driver.FindElement(By.XPath("//button[@id='accept-button']")).Click();
+        }
+
+        [Then(@"Refresh the page and make sure that all the data is still present and valid\.")]
+        public void ThenRefreshThePageAndMakeSureThatAllTheDataIsStillPresentAndValid_()
+        {
+            Driver.Navigate().Refresh();
+            Thread.Sleep(2000);
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).GetAttribute("value"), "Philoso");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).GetAttribute("value"), "Raptor");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).GetAttribute("value"), "+37060000000");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).GetAttribute("value"), "someone@something.com");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).GetAttribute("value"), "BA");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).GetAttribute("value"), "1234567890");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).GetAttribute("value"), "Wilno");
+            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).GetAttribute("value"), "951753456");
+
+        }
+
+        [Then(@"Delete at least one of the mandatory fields and check that at least one error message is displayed\.")]
+        public void ThenDeleteAtLeastOneOfTheMandatoryFieldsAndCheckThatAtLeastOneErrorMessageIsDisplayed_()
+        {
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).Clear();
+            Driver.FindElement(By.XPath("//input[@name='buy_now_submit']")).Click();
+            Thread.Sleep(2000);
+            Assert.IsTrue(Driver.FindElement(By.XPath("//div[@class='message red']")).Displayed);
         }
 
     }

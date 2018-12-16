@@ -98,6 +98,11 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("Add last extra service for two adults", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 13
  testRunner.Then("Fill all the personal data including all the agreements and options available", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 16
+ testRunner.And("Refresh the page and make sure that all the data is still present and valid.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 17
+ testRunner.Then("Delete at least one of the mandatory fields and check that at least one error mes" +
+                    "sage is displayed.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
