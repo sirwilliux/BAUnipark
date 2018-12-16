@@ -46,6 +46,7 @@ namespace BAUnipark
             Driver.FindElement(By.CssSelector("#time_from")).Click();
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'"+ (currentDay+1) +"')]")).Click();
             Thread.Sleep(1000);
+            Driver.FindElement(By.XPath("//a[@class='cookieConsentOK']")).Click();
             Driver.FindElement(By.CssSelector("#hour_from")).Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'15:00')]")).Click();
         }
@@ -134,7 +135,6 @@ namespace BAUnipark
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
             Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//a[@class='cookieConsentOK']")).Click();
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys("Philoso");
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys("Raptor");
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys("+37060000000");
