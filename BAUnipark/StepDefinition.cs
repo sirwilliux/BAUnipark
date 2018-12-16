@@ -6,6 +6,7 @@ using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
 
 
@@ -30,7 +31,11 @@ namespace BAUnipark
         public StepDefinition(Browser browser)
         {
             Driver = browser.Chrome;
+            PageFactory.InitElements(Driver, PageObject);
         }
+
+        private PageObject _pageObject;
+        public PageObject PageObject => _pageObject ?? (_pageObject = new PageObject());
 
         [Given(@"I Open Unipark website")]
         public void GivenIOpenUniparkWebsite()
@@ -43,18 +48,18 @@ namespace BAUnipark
         {
             
             Thread.Sleep(1000);
-            Driver.FindElement(By.CssSelector("#time_from")).Click();
+            PageObject.StartDateField.Click();
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'"+ (currentDay+1) +"')]")).Click();
             Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//a[@class='cookieConsentOK']")).Click();
-            Driver.FindElement(By.CssSelector("#hour_from")).Click();
+            PageObject.CookieConsentAcceptField.Click();
+            PageObject.StartHourField.Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'15:00')]")).Click();
         }
 
         [Given(@"Make sure today cannot be selected as To date")]
         public void GivenMakeSureTodayCannotBeSelectedAsToDate()
         {
-            Driver.FindElement(By.CssSelector("#time_to")).Click();
+            PageObject.EndDateField.Click();
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//span[contains(text(),'" + (currentDay) + "')]"));
 
         }
@@ -65,14 +70,14 @@ namespace BAUnipark
             Thread.Sleep(1000);
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'" + (currentDay+2) + "')]")).Click();
             Thread.Sleep(1000);
-            Driver.FindElement(By.CssSelector("#hour_to")).Click();
+            PageObject.EndHourField.Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'14:59')]")).Click();
         }
 
         [Given(@"Order the parking")]
         public void GivenOrderTheParking()
         {
-            Driver.FindElement(By.XPath("//div[@class='filter-1']//div[contains(@class, 'order-button') and not(contains(@class, 'order-button-mob'))]//button[@name='submit']")).Click();
+            PageObject.OrderSubmitButton.Click();
         }
 
         [Given(@"Select Riga's airport and make sure that the only zone is available")]
@@ -86,7 +91,7 @@ namespace BAUnipark
         [Given(@"Enter car related data")]
         public void GivenEnterCarRelatedData()
         {
-            Driver.FindElement(By.XPath("//input[@id='nr' and @type='text']")).SendKeys(Constants.CarNo);
+            PageObject.CarNoField.SendKeys(Constants.CarNo);
         }
 
         [Given(@"Select Vilnius cheapest zone")]
@@ -135,19 +140,19 @@ namespace BAUnipark
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
             Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys(Constants.FirstName);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys(Constants.LastName);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys(Constants.PhoneNo);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).SendKeys(Constants.Email);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='newsletter']")).Click();
-            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='name']")).Click();
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).SendKeys(Constants.CompanyTitle);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).SendKeys(Constants.CompanyCode);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).SendKeys(Constants.CompanyAddress);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).SendKeys(Constants.VatCode);
-            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='rules']")).Click();
+            PageObject.FirstNameField.SendKeys(Constants.FirstName);
+            PageObject.LastNameField.SendKeys(Constants.LastName);
+            PageObject.PhoneNoField.SendKeys(Constants.PhoneNo);
+            PageObject.EmailField.SendKeys(Constants.Email);
+            PageObject.NewsletterCheckbox.Click();
+            PageObject.ReceiptCheckbox.Click();
+            PageObject.CompanyTitleField.SendKeys(Constants.CompanyTitle);
+            PageObject.CompanyCodeField.SendKeys(Constants.CompanyCode);
+            PageObject.CompanyAddressField.SendKeys(Constants.CompanyAddress);
+            PageObject.CompanyVatCodeField.SendKeys(Constants.VatCode);
+            PageObject.RulesCheckbox.Click();
             Thread.Sleep(500);
-            Driver.FindElement(By.XPath("//button[@id='accept-button']")).Click();
+            PageObject.AcceptTermsButton.Click();
         }
 
         [Then(@"Refresh the page and make sure that all the data is still present and valid\.")]
@@ -155,21 +160,21 @@ namespace BAUnipark
         {
             Driver.Navigate().Refresh();
             Thread.Sleep(2000);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).GetAttribute("value"), Constants.FirstName);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).GetAttribute("value"), Constants.LastName);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).GetAttribute("value"), Constants.PhoneNo);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).GetAttribute("value"), Constants.Email);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).GetAttribute("value"), Constants.CompanyTitle);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).GetAttribute("value"), Constants.CompanyCode);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).GetAttribute("value"), Constants.CompanyAddress);
-            Assert.AreEqual(Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).GetAttribute("value"), Constants.VatCode);
+            Assert.AreEqual(PageObject.FirstNameField.GetAttribute("value"), Constants.FirstName);
+            Assert.AreEqual(PageObject.LastNameField.GetAttribute("value"), Constants.LastName);
+            Assert.AreEqual(PageObject.PhoneNoField.GetAttribute("value"), Constants.PhoneNo);
+            Assert.AreEqual(PageObject.EmailField.GetAttribute("value"), Constants.Email);
+            Assert.AreEqual(PageObject.CompanyTitleField.GetAttribute("value"), Constants.CompanyTitle);
+            Assert.AreEqual(PageObject.CompanyCodeField.GetAttribute("value"), Constants.CompanyCode);
+            Assert.AreEqual(PageObject.CompanyAddressField.GetAttribute("value"), Constants.CompanyAddress);
+            Assert.AreEqual(PageObject.CompanyVatCodeField.GetAttribute("value"), Constants.VatCode);
 
         }
 
         [Then(@"Delete at least one of the mandatory fields and check that at least one error message is displayed\.")]
         public void ThenDeleteAtLeastOneOfTheMandatoryFieldsAndCheckThatAtLeastOneErrorMessageIsDisplayed_()
         {
-            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).Clear();
+            PageObject.EmailField.Clear();
             Driver.FindElement(By.XPath("//input[@name='buy_now_submit']")).Click();
             Thread.Sleep(2000);
             Assert.IsTrue(Driver.FindElement(By.XPath("//div[@class='message red']")).Displayed);
