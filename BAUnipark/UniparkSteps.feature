@@ -1,6 +1,5 @@
 ﻿Feature: UniparkSteps
 
-@mytag
 Scenario: Book parking
 	Given I Open Unipark website
 	And Choose the From date to be tomorrow 3 PM

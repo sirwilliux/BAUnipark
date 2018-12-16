@@ -10,6 +10,13 @@ namespace BAUnipark
         {
             Console.WriteLine("Starting test...");
             Console.ReadLine();
-        }    
+        }
+
+        [AfterScenario]
+        public void AfterScenario()
+        {
+            StepDefinition.Driver.Close();
+        }
     }
+
 }

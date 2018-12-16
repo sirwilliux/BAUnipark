@@ -114,13 +114,40 @@ namespace BAUnipark
         [Given(@"Add last extra service for two adults")]
         public void GivenAddLastExtraServiceForTwoAdults()
         {
-            ScenarioContext.Current.Pending();
+            Thread.Sleep(2000);
+            IList<IWebElement> extraOptions = Driver.FindElements(By.XPath("//table[@data-zones]"));
+            var neededOption = "0";
+            foreach (var option in extraOptions)
+            {
+                if (option.Displayed)
+                {
+                    neededOption = option.GetAttribute("data-id");
+                }
+
+            }
+            Driver.FindElement(By.XPath("//table[@data-id='" + neededOption + "']//a[@class='up']")).Click();
+            Driver.FindElement(By.XPath("//table[@data-id='" + neededOption + "']//a[@class='up']")).Click();
         }
 
         [Then(@"Fill all the personal data including all the agreements and options available")]
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
-            ScenarioContext.Current.Pending();
+            Thread.Sleep(1000);
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys("Philoso");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys("Raptor");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys("+37060000000");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='email' and @type='text']")).SendKeys("someone@something.com");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='newsletter']")).Click();
+            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='name']")).Click();
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='title' and @type='text']")).SendKeys("BA");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='code' and @type='text']")).SendKeys("1234567890");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).SendKeys("Wilno");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).SendKeys("951753456");
+            Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='rules']")).Click();
+            Thread.Sleep(1000);
+            Driver.FindElement(By.XPath("//div[@class='closeCookieConsent']")).Click();
+            Thread.Sleep(500);
+            Driver.FindElement(By.XPath("//button[@id='accept-button']")).Click();
         }
 
     }
