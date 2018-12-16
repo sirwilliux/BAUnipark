@@ -133,6 +133,7 @@ namespace BAUnipark
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
             Thread.Sleep(1000);
+            Driver.FindElement(By.XPath("//div[@class='closeCookieConsent']")).Click();
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='firstname' and @type='text']")).SendKeys("Philoso");
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='lastname' and @type='text']")).SendKeys("Raptor");
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='phone_number' and @type='text']")).SendKeys("+37060000000");
@@ -144,8 +145,6 @@ namespace BAUnipark
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='address' and @type='text']")).SendKeys("Wilno");
             Driver.FindElement(By.XPath("//div[@id='step_2']//input[@name='vat_code' and @type='text']")).SendKeys("951753456");
             Driver.FindElement(By.XPath("//div[@id='step_2']//label[@for='rules']")).Click();
-            Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//div[@class='closeCookieConsent']")).Click();
             Thread.Sleep(500);
             Driver.FindElement(By.XPath("//button[@id='accept-button']")).Click();
         }
