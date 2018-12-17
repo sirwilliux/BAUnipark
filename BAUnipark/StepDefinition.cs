@@ -15,9 +15,11 @@ namespace BAUnipark
     [Binding]
     public class StepDefinition
     {
-        public static int currentDay = DateTime.Today.Day;
+        private PageObject _pageObject;
+        public PageObject PageObject => _pageObject ?? (_pageObject = new PageObject());
         public static IWebDriver Driver;
         public class Browser 
+
         {
             public IWebDriver Chrome;
 
@@ -28,14 +30,25 @@ namespace BAUnipark
                 Chrome = new ChromeDriver(options);
             }
         }
+
+        private static string NeededDate(int daysAway, bool fullDate = false)
+        {
+            var yourDate = (DateTime.Today.AddDays(daysAway)).ToString("s");
+            if (fullDate)
+            {
+                return yourDate.Substring(0, 10);
+            }
+            else
+            {
+                return yourDate.Substring(8, 2);
+            }
+        }
+
         public StepDefinition(Browser browser)
         {
             Driver = browser.Chrome;
             PageFactory.InitElements(Driver, PageObject);
         }
-
-        private PageObject _pageObject;
-        public PageObject PageObject => _pageObject ?? (_pageObject = new PageObject());
 
         [Given(@"I Open Unipark website")]
         public void GivenIOpenUniparkWebsite()
@@ -47,11 +60,9 @@ namespace BAUnipark
         public void GivenChooseTheFromDateToBeTomorrowPM()
         {
             
-            Hooks.WaitIsDisplayed(PageObject.StartDateField);
-            PageObject.StartDateField.Click();
-            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'"+ (currentDay+1) +"')]")).Click();
-            Hooks.WaitIsDisplayed(PageObject.CookieConsentAcceptField);
-            PageObject.CookieConsentAcceptField.Click();
+            Hooks.WaitIsDisplayed(PageObject.StartDateField, click: true);
+            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'"+ NeededDate(1) +"')]")).Click();
+            Hooks.WaitIsDisplayed(PageObject.CookieConsentAcceptField, click: true);
             PageObject.StartHourField.Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'15:00')]")).Click();
         }
@@ -60,7 +71,7 @@ namespace BAUnipark
         public void GivenMakeSureTodayCannotBeSelectedAsToDate()
         {
             PageObject.EndDateField.Click();
-            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//span[contains(text(),'" + (currentDay) + "')]"));
+            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//span[contains(text(),'" + NeededDate(0) + "')]"));
 
         }
 
@@ -68,16 +79,15 @@ namespace BAUnipark
         public void GivenSetToDateToTwoDaysFromNowOnAndTimeThatIsTheClosestOneToTheFromDate()
         {
             Thread.Sleep(1000);
-            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'" + (currentDay+2) + "')]")).Click();
-            Hooks.WaitIsDisplayed(PageObject.EndHourField);
-            PageObject.EndHourField.Click();
+            Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'" + NeededDate(2) + "')]")).Click();
+            Hooks.WaitIsDisplayed(PageObject.EndHourField, click: true);
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'14:59')]")).Click();
         }
 
         [Given(@"Order the parking")]
         public void GivenOrderTheParking()
         {
-            PageObject.OrderSubmitButton.Click();
+            PageObject.ContinueOrderButton.Click();
         }
 
         [Given(@"Select Riga's airport and make sure that the only zone is available")]
@@ -98,8 +108,8 @@ namespace BAUnipark
         public void GivenSelectVilniusCheapestZone()
         {
             Driver.FindElement(By.XPath("//div[@class='zone-select-div']//a[contains(text(),'Vilniaus')]")).Click();
-            Thread.Sleep(500);
-            IList<IWebElement> parkingOptions = Driver.FindElements(By.XPath("//div[@id='place_0']//td[@class='coll-4']"));
+            Hooks.WaitIsDisplayed(PageObject.ParkingOptionPrices[0]);
+            var parkingOptions = PageObject.ParkingOptionPrices;
             List<float> prices = new List<float>();
             foreach (var parkingOption in parkingOptions)
             {
@@ -121,8 +131,8 @@ namespace BAUnipark
         [Given(@"Add last extra service for two adults")]
         public void GivenAddLastExtraServiceForTwoAdults()
         {
-            Thread.Sleep(2000);
-            IList<IWebElement> extraOptions = Driver.FindElements(By.XPath("//table[@data-zones]"));
+            Hooks.WaitIsDisplayed(PageObject.ExtraBookingOptions[0]);
+            var extraOptions = PageObject.ExtraBookingOptions;
             var neededOption = "0";
             foreach (var option in extraOptions)
             {
@@ -151,8 +161,7 @@ namespace BAUnipark
             PageObject.CompanyAddressField.SendKeys(Constants.CompanyAddress);
             PageObject.CompanyVatCodeField.SendKeys(Constants.VatCode);
             PageObject.RulesCheckbox.Click();
-            Hooks.WaitIsDisplayed(PageObject.AcceptTermsButton, false);
-            PageObject.AcceptTermsButton.Click();
+            Hooks.WaitIsDisplayed(PageObject.AcceptTermsButton, false, true);
         }
 
         [Then(@"Refresh the page and make sure that all the data is still present and valid\.")]
@@ -160,6 +169,8 @@ namespace BAUnipark
         {
             Driver.Navigate().Refresh();
             Hooks.WaitIsDisplayed(PageObject.FirstNameField);
+            Assert.AreEqual(NeededDate(1, true), PageObject.OrderReviewFromDate.Text);
+            Assert.AreEqual(NeededDate(2, true), PageObject.OrderReviewToDate.Text);
             Assert.AreEqual(PageObject.FirstNameField.GetAttribute("value"), Constants.FirstName);
             Assert.AreEqual(PageObject.LastNameField.GetAttribute("value"), Constants.LastName);
             Assert.AreEqual(PageObject.PhoneNoField.GetAttribute("value"), Constants.PhoneNo);
@@ -175,9 +186,8 @@ namespace BAUnipark
         public void ThenDeleteAtLeastOneOfTheMandatoryFieldsAndCheckThatAtLeastOneErrorMessageIsDisplayed_()
         {
             PageObject.EmailField.Clear();
-            Driver.FindElement(By.XPath("//input[@name='buy_now_submit']")).Click();
-            Thread.Sleep(2000);
-            Assert.IsTrue(Driver.FindElement(By.XPath("//div[@class='message red']")).Displayed);
+            Hooks.WaitIsDisplayed(PageObject.SubmitParkingOrder, click: true);
+            Hooks.WaitIsDisplayed(PageObject.GeneralErrorMessage);
         }
 
     }

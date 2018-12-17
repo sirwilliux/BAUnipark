@@ -16,27 +16,29 @@ namespace BAUnipark
             Console.ReadLine();
         }
 
-        public static void WaitIsDisplayed(IWebElement element, bool scrollToObject = true)
+        public static void WaitIsDisplayed(IWebElement element, bool scrollToObject = true, bool click = false)
         {
             for (int i = 0; i < 5; i++)
             {
                 Thread.Sleep(500);
-                try
+                if (element.Displayed)
                 {
-                    Assert.IsTrue(element.Displayed);
-                    Thread.Sleep(500);               //Trying to deal with those pesky fades
-                    break;
-                }
-                catch (AssertionException)
-                {
-                    Console.WriteLine("Element "+ element +" wasn't found");
-                }
+                    if (scrollToObject)
+                    {
+                        StepDefinition.Driver.ExecuteJavaScript("arguments[0].scrollIntoView(false);", element);
+                    }
 
-                if (scrollToObject)
-                {
-                    StepDefinition.Driver.ExecuteJavaScript("arguments[0].scrollIntoView();", element);
+                    if (click)
+                    {
+                        Thread.Sleep(500); //Trying to deal with those pesky fades
+                        element.Click();
+                    }
+                break;
                 }
-
+                else
+                {
+                    Thread.Sleep(500);
+                }
             }
 
         }

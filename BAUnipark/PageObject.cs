@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
@@ -22,7 +23,7 @@ namespace BAUnipark
         public IWebElement CookieConsentAcceptField;
 
         [FindsBy(How = How.XPath, Using = "//div[@class='filter-1']//div[contains(@class, 'order-button') and not(contains(@class, 'order-button-mob'))]//button[@name='submit']")]
-        public IWebElement OrderSubmitButton;
+        public IWebElement ContinueOrderButton;
 
         [FindsBy(How = How.XPath, Using = "//input[@id='nr' and @type='text']")]
         public IWebElement CarNoField;
@@ -62,5 +63,23 @@ namespace BAUnipark
 
         [FindsBy(How = How.XPath, Using = "//button[@id='accept-button']")]
         public IWebElement AcceptTermsButton;
+
+        [FindsBy(How = How.XPath, Using = "//div[@class='message red']")]
+        public IWebElement GeneralErrorMessage;
+
+        [FindsBy(How = How.XPath, Using = "//input[@name='buy_now_submit']")]
+        public IWebElement SubmitParkingOrder;
+
+        [FindsBy(How = How.XPath, Using = "//div[@id='place_0']//td[@class='coll-4']")]
+        public IList<IWebElement> ParkingOptionPrices;
+
+        [FindsBy(How = How.XPath, Using = "//table[@data-zones]")]
+        public IList<IWebElement> ExtraBookingOptions;
+
+        [FindsBy(How = How.XPath, Using = "//span[@id='step_2_time_from']")]
+        public IWebElement OrderReviewFromDate;
+
+        [FindsBy(How = How.XPath, Using = "//span[@id='step_2_time_to']")]
+        public IWebElement OrderReviewToDate;
     }
 }
