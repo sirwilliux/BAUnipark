@@ -47,10 +47,10 @@ namespace BAUnipark
         public void GivenChooseTheFromDateToBeTomorrowPM()
         {
             
-            Thread.Sleep(1000);
+            Hooks.WaitIsDisplayed(PageObject.StartDateField);
             PageObject.StartDateField.Click();
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'"+ (currentDay+1) +"')]")).Click();
-            Thread.Sleep(1000);
+            Hooks.WaitIsDisplayed(PageObject.CookieConsentAcceptField);
             PageObject.CookieConsentAcceptField.Click();
             PageObject.StartHourField.Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'15:00')]")).Click();
@@ -69,7 +69,7 @@ namespace BAUnipark
         {
             Thread.Sleep(1000);
             Driver.FindElement(By.XPath("//table[@class= 'ui-datepicker-calendar']//a[contains(text(),'" + (currentDay+2) + "')]")).Click();
-            Thread.Sleep(1000);
+            Hooks.WaitIsDisplayed(PageObject.EndHourField);
             PageObject.EndHourField.Click();
             Driver.FindElement(By.XPath("//ul[@class='ui-timepicker-list']/li[contains(text(),'14:59')]")).Click();
         }
@@ -139,7 +139,7 @@ namespace BAUnipark
         [Then(@"Fill all the personal data including all the agreements and options available")]
         public void ThenFillAllThePersonalDataIncludingAllTheAgreementsAndOptionsAvailable()
         {
-            Thread.Sleep(1000);
+            Hooks.WaitIsDisplayed(PageObject.FirstNameField);
             PageObject.FirstNameField.SendKeys(Constants.FirstName);
             PageObject.LastNameField.SendKeys(Constants.LastName);
             PageObject.PhoneNoField.SendKeys(Constants.PhoneNo);
@@ -151,7 +151,7 @@ namespace BAUnipark
             PageObject.CompanyAddressField.SendKeys(Constants.CompanyAddress);
             PageObject.CompanyVatCodeField.SendKeys(Constants.VatCode);
             PageObject.RulesCheckbox.Click();
-            Thread.Sleep(500);
+            Hooks.WaitIsDisplayed(PageObject.AcceptTermsButton, false);
             PageObject.AcceptTermsButton.Click();
         }
 
@@ -159,7 +159,7 @@ namespace BAUnipark
         public void ThenRefreshThePageAndMakeSureThatAllTheDataIsStillPresentAndValid_()
         {
             Driver.Navigate().Refresh();
-            Thread.Sleep(2000);
+            Hooks.WaitIsDisplayed(PageObject.FirstNameField);
             Assert.AreEqual(PageObject.FirstNameField.GetAttribute("value"), Constants.FirstName);
             Assert.AreEqual(PageObject.LastNameField.GetAttribute("value"), Constants.LastName);
             Assert.AreEqual(PageObject.PhoneNoField.GetAttribute("value"), Constants.PhoneNo);
